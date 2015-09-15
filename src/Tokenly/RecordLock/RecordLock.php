@@ -69,7 +69,12 @@ class RecordLock {
             $this->release($id);
             return $response;
         } catch (Exception $e) {
-            $this->release($id);
+            // attempt to release - but ignore any exceptions if we fail
+            try {
+                $this->release($id);
+            } catch (Exception $ignored_exception) { }
+
+            // throw the original exception
             throw $e;
         }
     }

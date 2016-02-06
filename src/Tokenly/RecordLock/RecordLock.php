@@ -17,13 +17,7 @@ class RecordLock {
     public function __construct() {
     }
 
-    public function acquire($id, $timeout=60) {
-        if ($this->isAlreadyLocked($id)) {
-            $this->refresh($id, $timeout);
-            $this->pushLock($id);
-            return true;
-        }
-
+    public function acquireOnce($id, $timeout=60) {
         $driver_name = DB::getDriverName();
         if ($driver_name == 'mysql') {
             $acquired = $this->acquire_Mysql($id, $timeout);
@@ -31,8 +25,18 @@ class RecordLock {
             $acquired = $this->acquire_Memory($id, $timeout);
         }
 
-        $this->pushLock($id);
+        if ($acquired) { $this->pushLock($id); }
         return $acquired;
+    }
+
+    public function acquire($id, $timeout=60) {
+        if ($this->isAlreadyLocked($id)) {
+            $this->refresh($id, $timeout);
+            $this->pushLock($id);
+            return true;
+        }
+
+        return $this->acquireOnce($id, $timeout);
     }
 
     public function refresh($id, $timeout=60) {

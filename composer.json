@@ -1,6 +1,6 @@
 {
     "name": "tokenly/laravel-record-lock",
-    "description": "A library for locking records in a database",
+    "description": "A locking library",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -17,6 +17,6 @@
         "phpunit/phpunit": "~4"
     },
     "autoload": {
-        "psr-0": {"Tokenly\\RecordLock": "src"}
+        "psr-4": {"Tokenly\\RecordLock": "src/"}
     }
 }

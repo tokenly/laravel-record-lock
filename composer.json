@@ -17,6 +17,6 @@
         "phpunit/phpunit": "~4"
     },
     "autoload": {
-        "psr-4": {"Tokenly\\RecordLock": "src/"}
+        "psr-4": {"Tokenly\\RecordLock\\": "src/"}
     }
 }

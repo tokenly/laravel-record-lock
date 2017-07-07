@@ -17,18 +17,6 @@ class RecordLock {
     public function __construct() {
     }
 
-    public function acquireOnce($id, $timeout=60) {
-        $driver_name = DB::getDriverName();
-        if ($driver_name == 'mysql') {
-            $acquired = $this->acquire_Mysql($id, $timeout);
-        } else {
-            $acquired = $this->acquire_Memory($id, $timeout);
-        }
-
-        if ($acquired) { $this->pushLock($id); }
-        return $acquired;
-    }
-
     public function acquire($id, $timeout=60) {
         if ($this->isAlreadyLocked($id)) {
             $this->refresh($id, $timeout);
@@ -37,17 +25,6 @@ class RecordLock {
         }
 
         return $this->acquireOnce($id, $timeout);
-    }
-
-    public function refresh($id, $timeout=60) {
-        $driver_name = DB::getDriverName();
-        if ($driver_name == 'mysql') {
-            $refreshed = $this->refresh_Mysql($id, $timeout);
-        } else {
-            $refreshed = $this->refresh_Memory($id, $timeout);
-        }
-
-        return $refreshed;
     }
 
     public function release($id) {
@@ -83,6 +60,31 @@ class RecordLock {
         }
     }
 
+    public function refresh($id, $timeout=60) {
+        $driver_name = DB::getDriverName();
+        if ($driver_name == 'mysql') {
+            $refreshed = $this->refresh_Mysql($id, $timeout);
+        } else {
+            $refreshed = $this->refresh_Memory($id, $timeout);
+        }
+
+        return $refreshed;
+    }
+
+    public function acquireOnce($id, $timeout=60) {
+        $driver_name = DB::getDriverName();
+        if ($driver_name == 'mysql') {
+            $acquired = $this->acquire_Mysql($id, $timeout);
+        } else {
+            $acquired = $this->acquire_Memory($id, $timeout);
+        }
+
+        if ($acquired) { $this->pushLock($id); }
+        return $acquired;
+    }
+
+    // ------------------------------------------------------------------------
+    
     protected function acquire_Mysql($id, $timeout) {
         $result = DB::selectOne(DB::raw('SELECT GET_LOCK(?,?) AS locked'), [$id, $timeout]);
         return !!$result->locked;

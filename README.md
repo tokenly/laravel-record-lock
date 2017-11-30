@@ -11,7 +11,7 @@ A Laravel library for creating a shared lock across an application.  Requires a 
 composer require tokenly/laravel-record-lock
 ```
 
-### Add the Service Provider
+### Add the Service Provider (Laravel <= 5.4 only)
 
 Add the following to the `providers` array in your application config:
 

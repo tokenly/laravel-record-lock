@@ -18,5 +18,12 @@
     },
     "autoload": {
         "psr-4": {"Tokenly\\RecordLock\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tokenly\\RecordLock\\Provider\\RecordLockServiceProvider"
+            ]
+        }
     }
 }

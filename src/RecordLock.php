@@ -44,7 +44,11 @@ class RecordLock {
     }
 
     public function acquireAndExecute($id, Callable $func, $timeout=60) {
-        $this->acquire($id, $timeout);
+        $acquired = $this->acquire($id, $timeout);
+        if (!$acquired) {
+            throw new Exception("Unable to acquire lock", 1);
+        }
+
         try {
             $response = $func();
             $this->release($id);
@@ -140,5 +144,3 @@ class RecordLock {
     }
 
 }
-
-
